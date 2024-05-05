@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.apitesting.model.data.Person
-import com.example.apitesting.network.ApiClient
 import com.example.apitesting.repositories.PersonRepository
 import com.example.apitesting.ui.components.PersonCard
 import kotlinx.coroutines.launch
@@ -21,15 +20,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun PeopleScreen() {
     val coroutineScope = rememberCoroutineScope()
-    val personRepository = remember { PersonRepository(ApiClient.create()) }
+    val personRepository = remember { PersonRepository() }
     val people = remember { mutableStateOf(emptyList<Person>()) }
 
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             Button(onClick = {
                 coroutineScope.launch {
-                    val response = personRepository.getPersons(4)
-                    people.value = response.results
+                    personRepository.getPersons(5) { response ->
+                        people.value = response
+                    }
                 }
             }) {
                 Text("Fetch Persons")
