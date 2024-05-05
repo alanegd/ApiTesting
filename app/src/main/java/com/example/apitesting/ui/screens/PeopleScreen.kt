@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -25,15 +24,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.apitesting.model.data.Person
-import com.example.apitesting.repositories.PersonRepository
 import com.example.apitesting.ui.components.PeopleList
-import kotlinx.coroutines.launch
 
 import com.example.apitesting.factories.PersonRepositoryFactory
 
 @Composable
 fun PeopleScreen() {
-    val coroutineScope = rememberCoroutineScope()
     val numberOfPeople = remember { mutableStateOf("") }
     val people = remember { mutableStateOf(emptyList<Person>()) }
 
@@ -53,15 +49,13 @@ fun PeopleScreen() {
                 fontWeight = FontWeight.Bold
             )
             SearchBar(numberOfPeople) {
-                coroutineScope.launch {
-                    val numberOfPeopleInt = numberOfPeople.value.toIntOrNull() ?: 0
-                    if (numberOfPeopleInt > 0) {
-                        personRepository.getPersons(numberOfPeopleInt) { response ->
-                            people.value = response
-                        }
-                    } else {
-                        people.value = emptyList()
+                val numberOfPeopleInt = numberOfPeople.value.toIntOrNull() ?: 0
+                if (numberOfPeopleInt > 0) {
+                    personRepository.getPersons(numberOfPeopleInt) { response ->
+                        people.value = response
                     }
+                } else {
+                    people.value = emptyList()
                 }
             }
             PeopleList(people)

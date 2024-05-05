@@ -23,13 +23,13 @@ class PersonRepository {
                     val people = response.body()?.results ?: emptyList()
                     callback(people)
                 } else {
-                    Log.d("PersonRepository", "Failed to fetch persons: ${response.code()}")
+                    Log.d("HeroRepository", "Error: ${response.errorBody()}")
                 }
             }
 
             override fun onFailure(call: Call<PersonResponse>, t: Throwable) {
                 t.message?.let {
-                    Log.d("PersonRepository", it)
+                    Log.d("HeroRepository", it)
                 }
             }
         })
