@@ -15,7 +15,10 @@ class PersonRepository {
     fun getPersons(numberOfPersons: Int, callback: (List<Person>) -> Unit) {
         val call = personService.getPersons(numberOfPersons)
         call.enqueue(object : Callback<PersonResponse> {
-            override fun onResponse(call: Call<PersonResponse>, response: Response<PersonResponse>) {
+            override fun onResponse(
+                call: Call<PersonResponse>,
+                response: Response<PersonResponse>
+            ) {
                 if (response.isSuccessful) {
                     val people = response.body()?.results ?: emptyList()
                     callback(people)
@@ -25,7 +28,9 @@ class PersonRepository {
             }
 
             override fun onFailure(call: Call<PersonResponse>, t: Throwable) {
-                Log.e("PersonRepository", "Error fetching persons", t)
+                t.message?.let {
+                    Log.d("PersonRepository", it)
+                }
             }
         })
     }
