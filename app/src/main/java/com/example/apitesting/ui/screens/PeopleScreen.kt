@@ -29,12 +29,15 @@ import com.example.apitesting.repositories.PersonRepository
 import com.example.apitesting.ui.components.PeopleList
 import kotlinx.coroutines.launch
 
+import com.example.apitesting.factories.PersonRepositoryFactory
+
 @Composable
 fun PeopleScreen() {
     val coroutineScope = rememberCoroutineScope()
-    val personRepository = remember { PersonRepository() }
     val numberOfPeople = remember { mutableStateOf("") }
     val people = remember { mutableStateOf(emptyList<Person>()) }
+
+    val personRepository = PersonRepositoryFactory.getPersonRepository()
 
     Scaffold { paddingValues ->
         Column(
@@ -65,6 +68,7 @@ fun PeopleScreen() {
         }
     }
 }
+
 
 @Composable
 fun SearchBar(numberOfPeople: MutableState<String>, onShowPeopleClick: () -> Unit) {
